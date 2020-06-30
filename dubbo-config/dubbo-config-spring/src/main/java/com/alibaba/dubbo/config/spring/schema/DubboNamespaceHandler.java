@@ -35,6 +35,9 @@ public class DubboNamespaceHandler extends NamespaceHandlerSupport {
     }
 
     public void init() {
+        //解析application标签
+        // 创建一个保存目标bean也就是对应的Config对象，如ApplicationConfig，RegistryConfig等的
+        // BeanDefinition对象，最终其会注册到BeanFactoryRegistry中
         registerBeanDefinitionParser("application", new DubboBeanDefinitionParser(ApplicationConfig.class, true));
         registerBeanDefinitionParser("module", new DubboBeanDefinitionParser(ModuleConfig.class, true));
         registerBeanDefinitionParser("registry", new DubboBeanDefinitionParser(RegistryConfig.class, true));
