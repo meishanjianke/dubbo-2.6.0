@@ -34,6 +34,7 @@ public class DubboNamespaceHandler extends NamespaceHandlerSupport {
         Version.checkDuplicate(DubboNamespaceHandler.class);
     }
 
+    @Override
     public void init() {
         //解析application标签
         // 创建一个保存目标bean也就是对应的Config对象，如ApplicationConfig，RegistryConfig等的

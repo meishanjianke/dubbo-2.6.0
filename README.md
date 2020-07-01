@@ -1,20 +1,27 @@
-# Dubbo Project
+Dubbo中常用有7个标签。
+分为三个类别：公用标签，服务提供者标签，服务消费者标签
+公用标签
+<dubbo:application/>和  <dubbo:registry/>
+A、配置应用信息
+<dubbo:application name="服务的名称"/>
+B、配置注册中心
+<dubbo:registry address="ip:port" protocol="协议"/>
 
-[![Build Status](https://travis-ci.org/alibaba/dubbo.svg?branch=master)](https://travis-ci.org/alibaba/dubbo) 
-[![codecov](https://codecov.io/gh/alibaba/dubbo/branch/master/graph/badge.svg)](https://codecov.io/gh/alibaba/dubbo)
-[![Gitter](https://badges.gitter.im/alibaba/dubbo.svg)](https://gitter.im/alibaba/dubbo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-![license](https://img.shields.io/github/license/alibaba/dubbo.svg)
-![maven](https://img.shields.io/maven-central/v/com.alibaba/dubbo.svg)
+服务提供者标签
+A、配置服务提供者
+<dubbo:provider/>设置<dubbo:service>和<dubbo:protocol>标签的默认值  
+<dubbo:provider protocol="协议" host="主机 ip" />
+B、配置服务提供者的访问协议
+<dubbo:protocol name="dubbo" port="20880"/>
+C、配置服务提供者暴露自己的服务
+<dubbo:service interface="服务接口名"  ref="服务实现对象 bean">
 
-Dubbo is a high-performance, java based RPC framework open-sourced by Alibaba. Please visit [dubbo.io](http://dubbo.io) for quick start and other information.
+服务消费者标签
+A、配置服务消费者的默认值
+<dubbo:consumer/>  配置服务消费者的默认值，即<dubbo:reference>标签的默认值
+<dubbo:consumertimeout=”1000” retries=”2”  />  默认远程连接超时 1000 毫秒，重新连接次数 2
+B、配置服务消费者引用服务
+<dubbo:referenceid=”服务引用 bean 的 id” interface=”服务接口名”/>
 
-We are now collecting dubbo user info in order to help us to improve dubbo better, pls. kindly help us by providing yours on [issue#1012: Wanted: who's using dubbo](https://github.com/alibaba/dubbo/issues/1012), thanks :)
-
-## Links
-
-* [Side projects](http://github.com/dubbo)
-* [Gitter channel](https://gitter.im/alibaba/dubbo)
-* [Mailing list](https://groups.google.com/forum/#!forum/dubbo)
-* [Dubbo user manual](http://dubbo.io/books/dubbo-user-book/)
-* [Dubbo developer guide](http://dubbo.io/books/dubbo-dev-book/)
-* [Dubbo admin manual](http://dubbo.io/books/dubbo-admin-book/)
+Dubbo源码阅读顺序
+原文链接：https://blog.csdn.net/heroqiang/article/details/85340958
