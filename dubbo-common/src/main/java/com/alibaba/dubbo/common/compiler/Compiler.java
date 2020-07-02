@@ -20,6 +20,7 @@ package com.alibaba.dubbo.common.compiler;
 import com.alibaba.dubbo.common.extension.SPI;
 
 /**
+ * 编译
  * Compiler. (SPI, Singleton, ThreadSafe)
  */
 @SPI("javassist")
