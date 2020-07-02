@@ -64,6 +64,7 @@ public class NettyServer extends AbstractServer implements Server {
 
     public NettyServer(URL url, ChannelHandler handler) throws RemotingException {
         // 调用父类构造方法
+        /* 为url设置线程名称，包装handler，调用父类构造方法初始化 */
         super(url, ChannelHandlers.wrap(handler, ExecutorUtil.setThreadName(url, SERVER_THREAD_POOL_NAME)));
     }
 

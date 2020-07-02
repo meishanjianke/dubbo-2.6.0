@@ -200,8 +200,9 @@ public class RegistryProtocol implements Protocol {
 
     @SuppressWarnings("unchecked")
     private <T> ExporterChangeableWrapper<T> doLocalExport(final Invoker<T> originInvoker) {
-        String key = getCacheKey(originInvoker);
+        String key = getCacheKey(originInvoker);// 缓存key，就是providerUrl
         // 访问缓存
+        // bounds为providerurl和exporter的映射，目的是为了解决RMI重复出现端口冲突的问题，已经暴露的服务不再暴露。
         ExporterChangeableWrapper<T> exporter = (ExporterChangeableWrapper<T>) bounds.get(key);
         if (exporter == null) {
             synchronized (bounds) {
