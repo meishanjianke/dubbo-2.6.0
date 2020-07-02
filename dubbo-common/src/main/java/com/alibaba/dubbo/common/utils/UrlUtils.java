@@ -45,13 +45,16 @@ public class UrlUtils {
                     }
                     backup.append(addresses[i]);
                 }
+                // 设置 backup，如192.168.1.1,192.168.1.2 --> 192.168.1.1?backup=192.168.1.2
                 url += "?" + Constants.BACKUP_KEY + "=" + backup.toString();
             }
         }
         String defaultProtocol = defaults == null ? null : defaults.get("protocol");
         if (defaultProtocol == null || defaultProtocol.length() == 0) {
+            // 默认协议为 dubbo
             defaultProtocol = "dubbo";
         }
+        // 获取一些默认配置
         String defaultUsername = defaults == null ? null : defaults.get("username");
         String defaultPassword = defaults == null ? null : defaults.get("password");
         int defaultPort = StringUtils.parseInteger(defaults == null ? null : defaults.get("port"));
@@ -65,6 +68,7 @@ public class UrlUtils {
             defaultParameters.remove("port");
             defaultParameters.remove("path");
         }
+        // 将 url 解析成 URL 对象
         URL u = URL.valueOf(url);
         boolean changed = false;
         String protocol = u.getProtocol();
@@ -74,6 +78,7 @@ public class UrlUtils {
         int port = u.getPort();
         String path = u.getPath();
         Map<String, String> parameters = new HashMap<String, String>(u.getParameters());
+        // 判断几个属性的值是否为空，如果为空赋为默认值
         if ((protocol == null || protocol.length() == 0) && defaultProtocol != null && defaultProtocol.length() > 0) {
             changed = true;
             protocol = defaultProtocol;
@@ -119,6 +124,7 @@ public class UrlUtils {
             }
         }
         if (changed) {
+            // 如果属性值有改变，则用新的属性值构建新的 URL 对象
             u = new URL(protocol, username, password, host, port, path, parameters);
         }
         return u;
@@ -128,6 +134,7 @@ public class UrlUtils {
         if (address == null || address.length() == 0) {
             return null;
         }
+        // 分割地址
         String[] addresses = Constants.REGISTRY_SPLIT_PATTERN.split(address);
         if (addresses == null || addresses.length == 0) {
             return null; //here won't be empty
