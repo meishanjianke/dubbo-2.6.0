@@ -115,6 +115,10 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
         return service;
     }
 
+    /**
+     * 当我们ioc容器整个刷新完成，也就是ioc容器里面所有对象都创建完成以后来回调方法
+     * @param event
+     */
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         // 是否有延迟导出 && 是否已导出 && 是不是已被取消导出
