@@ -412,13 +412,14 @@ public class RegistryProtocol implements Protocol {
         @Override
         public synchronized void notify(List<URL> urls) {
             logger.debug("original override urls: " + urls);
+            // 找到与订阅url相匹配的url集合
             List<URL> matchedUrls = getMatchedUrls(urls, subscribeUrl);
             logger.debug("subscribe url: " + subscribeUrl + ", override urls: " + matchedUrls);
             // No matching results
             if (matchedUrls.isEmpty()) {
                 return;
             }
-
+            // 转换覆盖url以便在重新引用时使用，每次发送所有规则，url将被重新组合和计算
             List<Configurator> configurators = RegistryDirectory.toConfigurators(matchedUrls);
 
             final Invoker<?> invoker;
@@ -428,6 +429,7 @@ public class RegistryProtocol implements Protocol {
                 invoker = originInvoker;
             }
             //The origin invoker
+            // 原invoker url
             URL originUrl = RegistryProtocol.this.getProviderUrl(invoker);
             String key = getCacheKey(originInvoker);
             ExporterChangeableWrapper<?> exporter = bounds.get(key);
@@ -438,8 +440,10 @@ public class RegistryProtocol implements Protocol {
             //The current, may have been merged many times
             URL currentUrl = exporter.getInvoker().getUrl();
             //Merged with this configuration
+            // 与此配置合并，产生新的url
             URL newUrl = getConfigedInvokerUrl(configurators, originUrl);
             if (!currentUrl.equals(newUrl)) {
+                // 重新暴露修改后的url的invoker
                 RegistryProtocol.this.doChangeLocalExport(originInvoker, newUrl);
                 logger.info("exported provider url changed, origin url: " + originUrl + ", old export url: " + currentUrl + ", new export url: " + newUrl);
             }

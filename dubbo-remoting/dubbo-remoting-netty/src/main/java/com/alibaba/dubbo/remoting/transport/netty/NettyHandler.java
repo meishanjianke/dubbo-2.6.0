@@ -85,10 +85,12 @@ public class NettyHandler extends SimpleChannelHandler {
 
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
+        // 连接成功后添加netty的Channel和dubbo的NettyChannel之间的映射关系
         NettyChannel channel = NettyChannel.getOrAddChannel(ctx.getChannel(), url, handler);
         try {
             handler.received(channel, e.getMessage());
         } finally {
+            // 如果连接断开，移除netty的Channel和dubbo的NettyChannel之间的映射关系
             NettyChannel.removeChannelIfDisconnected(ctx.getChannel());
         }
     }

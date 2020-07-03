@@ -37,7 +37,9 @@ public class ZkclientZookeeperClient extends AbstractZookeeperClient<IZkChildLis
 
     public ZkclientZookeeperClient(URL url) {
         super(url);
+        /* 构建ZkClientWrapper，可以在连接超时后自动监控连接的状态 */
         client = new ZkClientWrapper(url.getBackupAddress(), 30000);
+        // 添加监听器，用于连接状态变更通知监听器
         client.addListener(new IZkStateListener() {
             @Override
             public void handleStateChanged(KeeperState state) throws Exception {
@@ -54,13 +56,14 @@ public class ZkclientZookeeperClient extends AbstractZookeeperClient<IZkChildLis
                 stateChanged(StateListener.RECONNECTED);
             }
         });
-        client.start();
+        client.start();/* 开启线程，连接zookeeper */
     }
 
 
     @Override
     public void createPersistent(String path) {
         try {
+            /* 创建持久节点 */
             client.createPersistent(path);
         } catch (ZkNodeExistsException e) {
         }
@@ -69,6 +72,7 @@ public class ZkclientZookeeperClient extends AbstractZookeeperClient<IZkChildLis
     @Override
     public void createEphemeral(String path) {
         try {
+            // 调用ZkClient的createEphemeral方法创建临时节点
             client.createEphemeral(path);
         } catch (ZkNodeExistsException e) {
         }

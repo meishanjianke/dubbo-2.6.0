@@ -49,6 +49,7 @@ public class ZkClientWrapper {
 
     public ZkClientWrapper(final String serverAddr, long timeout) {
         this.timeout = timeout;
+        // 创建任务创建ZkClient
         listenableFutureTask = ListenableFutureTask.create(new Callable<ZkClient>() {
             @Override
             public ZkClient call() throws Exception {
@@ -62,7 +63,7 @@ public class ZkClientWrapper {
             Thread connectThread = new Thread(listenableFutureTask);
             connectThread.setName("DubboZkclientConnector");
             connectThread.setDaemon(true);
-            connectThread.start();
+            connectThread.start();// 创建线程执行创建ZkClient任务
             try {
                 client = listenableFutureTask.get(timeout, TimeUnit.MILLISECONDS);
             } catch (Throwable t) {
@@ -96,6 +97,7 @@ public class ZkClientWrapper {
 
     public void createPersistent(String path) {
         Assert.notNull(client, new IllegalStateException("Zookeeper is not connected yet!"));
+        // 调用ZkClient的createPersistent方法创建临时节点
         client.createPersistent(path, true);
     }
 

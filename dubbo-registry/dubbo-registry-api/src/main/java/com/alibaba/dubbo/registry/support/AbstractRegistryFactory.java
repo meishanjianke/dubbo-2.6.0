@@ -87,6 +87,7 @@ public abstract class AbstractRegistryFactory implements RegistryFactory {
                 .removeParameters(Constants.EXPORT_KEY, Constants.REFER_KEY);
         String key = url.toServiceString();
         // Lock the registry access process to ensure a single instance of the registry
+        // 锁定注册中心的访问过程以确保注册中心的的单个实例
         LOCK.lock();
         try {
             // 访问缓存
