@@ -38,6 +38,7 @@ public class Tool {
 
     private static final Pattern IP_PATTERN = Pattern.compile("\\d{1,3}(\\.\\d{1,3}){3,5}$");
     private static final Comparator<String> SIMPLE_NAME_COMPARATOR = new Comparator<String>() {
+        @Override
         public int compare(String s1, String s2) {
             if (s1 == null && s2 == null) {
                 return 0;

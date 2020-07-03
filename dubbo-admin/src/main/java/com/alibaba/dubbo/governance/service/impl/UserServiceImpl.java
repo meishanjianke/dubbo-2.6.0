@@ -40,6 +40,7 @@ public class UserServiceImpl extends AbstractService implements UserService {
         this.guestPassword = (password == null ? "" : password);
     }
 
+    @Override
     public User findUser(String username) {
         if ("guest".equals(username)) {
             User user = new User();
@@ -65,6 +66,7 @@ public class UserServiceImpl extends AbstractService implements UserService {
         return null;
     }
 
+    @Override
     public List<User> findAllUsers() {
         // TODO Auto-generated method stub
         return null;
@@ -75,46 +77,55 @@ public class UserServiceImpl extends AbstractService implements UserService {
         return null;
     }
 
+    @Override
     public User findById(Long id) {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public void createUser(User user) {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public void updateUser(User user) {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public void modifyUser(User user) {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public boolean updatePassword(User user, String oldPassword) {
         // TODO Auto-generated method stub
         return false;
     }
 
+    @Override
     public void resetPassword(User user) {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public void enableUser(User user) {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public void disableUser(User user) {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public void deleteUser(User user) {
         // TODO Auto-generated method stub
 

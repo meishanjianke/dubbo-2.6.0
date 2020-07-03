@@ -41,6 +41,7 @@ public class SystemPageHandler implements PageHandler {
     private static final long HOUR = 60 * MINUTE;
     private static final long DAY = 24 * HOUR;
 
+    @Override
     public Page handle(URL url) {
         List<List<String>> rows = new ArrayList<List<String>>();
         List<String> row;

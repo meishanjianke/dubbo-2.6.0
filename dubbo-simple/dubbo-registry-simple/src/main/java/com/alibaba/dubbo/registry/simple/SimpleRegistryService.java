@@ -49,10 +49,12 @@ public class SimpleRegistryService extends AbstractRegistry {
         super(new URL("dubbo", NetUtils.getLocalHost(), 0, RegistryService.class.getName(), "file", "N/A"));
     }
 
+    @Override
     public boolean isAvailable() {
         return true;
     }
 
+    @Override
     public List<URL> lookup(URL url) {
         List<URL> urls = new ArrayList<URL>();
         for (URL u : getRegistered()) {
@@ -63,6 +65,7 @@ public class SimpleRegistryService extends AbstractRegistry {
         return urls;
     }
 
+    @Override
     public void register(URL url) {
         String client = RpcContext.getContext().getRemoteAddressString();
         Set<URL> urls = remoteRegistered.get(client);
@@ -75,6 +78,7 @@ public class SimpleRegistryService extends AbstractRegistry {
         registered(url);
     }
 
+    @Override
     public void unregister(URL url) {
         String client = RpcContext.getContext().getRemoteAddressString();
         Set<URL> urls = remoteRegistered.get(client);
@@ -85,6 +89,7 @@ public class SimpleRegistryService extends AbstractRegistry {
         unregistered(url);
     }
 
+    @Override
     public void subscribe(URL url, NotifyListener listener) {
         if (getUrl().getPort() == 0) {
             URL registryUrl = RpcContext.getContext().getUrl();
@@ -110,6 +115,7 @@ public class SimpleRegistryService extends AbstractRegistry {
         subscribed(url, listener);
     }
 
+    @Override
     public void unsubscribe(URL url, NotifyListener listener) {
         if (!Constants.ANY_VALUE.equals(url.getServiceInterface())
                 && url.getParameter(Constants.REGISTER_KEY, true)) {
@@ -152,6 +158,7 @@ public class SimpleRegistryService extends AbstractRegistry {
     protected void subscribed(final URL url, final NotifyListener listener) {
         if (Constants.ANY_VALUE.equals(url.getServiceInterface())) {
             new Thread(new Runnable() {
+                @Override
                 public void run() {
                     Map<String, List<URL>> map = new HashMap<String, List<URL>>();
                     for (URL u : getRegistered()) {

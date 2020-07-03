@@ -30,6 +30,7 @@ import java.util.List;
  */
 public class ProvidersPageHandler implements PageHandler {
 
+    @Override
     public Page handle(URL url) {
         String service = url.getParameter("service");
         String host = url.getParameter("host");

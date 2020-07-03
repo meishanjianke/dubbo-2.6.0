@@ -31,6 +31,7 @@ import java.util.Set;
  */
 public class DependenciesPageHandler implements PageHandler {
 
+    @Override
     public Page handle(URL url) {
         String application = url.getParameter("application");
         if (application == null || application.length() == 0) {

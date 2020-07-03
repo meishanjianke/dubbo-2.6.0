@@ -40,33 +40,39 @@ public class OwnerServiceImpl extends AbstractService implements OwnerService {
     @Autowired
     OverrideService overrideService;
 
+    @java.lang.Override
     public List<String> findAllServiceNames() {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @java.lang.Override
     public List<String> findServiceNamesByUsername(String username) {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @java.lang.Override
     public List<String> findUsernamesByServiceName(String serviceName) {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @java.lang.Override
     public List<Owner> findByService(String serviceName) {
         List<Provider> pList = providerService.findByService(serviceName);
         List<Override> cList = overrideService.findByServiceAndAddress(serviceName, Constants.ANYHOST_VALUE);
         return toOverrideLiset(pList, cList);
     }
 
+    @java.lang.Override
     public List<Owner> findAll() {
         List<Provider> pList = providerService.findAll();
         List<Override> cList = overrideService.findAll();
         return toOverrideLiset(pList, cList);
     }
 
+    @java.lang.Override
     public Owner findById(Long id) {
 
         return null;
@@ -99,6 +105,7 @@ public class OwnerServiceImpl extends AbstractService implements OwnerService {
         return new ArrayList<Owner>(oList.values());
     }
 
+    @java.lang.Override
     public void saveOwner(Owner owner) {
         List<Override> overrides = overrideService.findByServiceAndAddress(owner.getService(), Constants.ANYHOST_VALUE);
         if (overrides == null || overrides.size() == 0) {
@@ -124,6 +131,7 @@ public class OwnerServiceImpl extends AbstractService implements OwnerService {
         }
     }
 
+    @java.lang.Override
     public void deleteOwner(Owner owner) {
         List<Override> overrides = overrideService.findByServiceAndAddress(owner.getService(), Constants.ANYHOST_VALUE);
         if (overrides == null || overrides.size() == 0) {

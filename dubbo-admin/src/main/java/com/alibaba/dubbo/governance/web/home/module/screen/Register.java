@@ -38,6 +38,7 @@ public class Register extends Shell {
 //    @Autowired
 //    private RegistryCache registryCache;
 
+    @Override
     @SuppressWarnings("unchecked")
     protected String doExecute(Map<String, Object> context) throws Exception {
         Map<String, String[]> params = request.getParameterMap();

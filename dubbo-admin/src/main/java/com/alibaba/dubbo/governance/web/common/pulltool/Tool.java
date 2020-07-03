@@ -54,6 +54,7 @@ import java.util.Map;
 public class Tool {
 
     private static final Comparator<String> SIMPLE_NAME_COMPARATOR = new Comparator<String>() {
+        @java.lang.Override
         public int compare(String s1, String s2) {
             if (s1 == null && s2 == null) {
                 return 0;

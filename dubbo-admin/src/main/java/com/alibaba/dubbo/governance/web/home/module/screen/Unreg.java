@@ -27,6 +27,7 @@ import java.util.Set;
  */
 public class Unreg extends Restful {
 
+    @Override
     public Result doExecute(Map<String, Object> context) throws Exception {
         if (url == null) {
             throw new IllegalArgumentException("please give me the url");

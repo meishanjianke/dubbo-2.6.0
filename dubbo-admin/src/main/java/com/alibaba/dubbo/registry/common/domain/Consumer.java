@@ -192,6 +192,7 @@ public class Consumer extends Entity {
         this.providers = providers;
     }
 
+    @java.lang.Override
     public String toString() {
         return "Consumer [service=" + service + ", parameters=" + parameters + ", result=" + result
                 + ", address=" + address + ", registry=" + registry + ", application="

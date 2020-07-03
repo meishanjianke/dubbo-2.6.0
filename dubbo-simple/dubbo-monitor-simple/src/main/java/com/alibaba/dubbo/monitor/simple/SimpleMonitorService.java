@@ -77,6 +77,7 @@ public class SimpleMonitorService implements MonitorService {
     public SimpleMonitorService() {
         queue = new LinkedBlockingQueue<URL>(Integer.parseInt(ConfigUtils.getProperty("dubbo.monitor.queue", "100000")));
         writeThread = new Thread(new Runnable() {
+            @Override
             public void run() {
                 while (running) {
                     try {
@@ -95,6 +96,7 @@ public class SimpleMonitorService implements MonitorService {
         writeThread.setName("DubboMonitorAsyncWriteLogThread");
         writeThread.start();
         chartFuture = scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
+            @Override
             public void run() {
                 try {
                     draw(); // draw chart
@@ -384,6 +386,7 @@ public class SimpleMonitorService implements MonitorService {
         collect(statistics);
     }
 
+    @Override
     public void collect(URL statistics) {
         queue.offer(statistics);
         if (logger.isInfoEnabled()) {
@@ -391,6 +394,7 @@ public class SimpleMonitorService implements MonitorService {
         }
     }
 
+    @Override
     public List<URL> lookup(URL query) {
         // TODO Auto-generated method stub
         return null;

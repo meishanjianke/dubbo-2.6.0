@@ -103,6 +103,7 @@ public class RegistryProtocol implements Protocol {
         this.proxyFactory = proxyFactory;
     }
 
+    @Override
     public int getDefaultPort() {
         return 9090;
     }
@@ -133,6 +134,7 @@ public class RegistryProtocol implements Protocol {
      * @return
      * @throws RpcException
      */
+    @Override
     public <T> Exporter<T> export(final Invoker<T> originInvoker) throws RpcException {
         //export invoker
         // 导出服务
@@ -173,10 +175,12 @@ public class RegistryProtocol implements Protocol {
         //Ensure that a new exporter instance is returned every time export
         // 创建并返回 DestroyableExporter
         return new Exporter<T>() {
+            @Override
             public Invoker<T> getInvoker() {
                 return exporter.getInvoker();
             }
 
+            @Override
             public void unexport() {
                 try {
                     exporter.unexport();
@@ -309,6 +313,7 @@ public class RegistryProtocol implements Protocol {
         return key;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException {
         url = url.setProtocol(url.getParameter(Constants.REGISTRY_KEY, Constants.DEFAULT_REGISTRY)).removeParameter(Constants.REGISTRY_KEY);
@@ -355,6 +360,7 @@ public class RegistryProtocol implements Protocol {
         return invoker;
     }
 
+    @Override
     public void destroy() {
         List<Exporter<?>> exporters = new ArrayList<Exporter<?>>(bounds.values());
         for (Exporter<?> exporter : exporters) {
@@ -403,6 +409,7 @@ public class RegistryProtocol implements Protocol {
         /**
          * @param urls The list of registered information , is always not empty, The meaning is the same as the return value of {@link com.alibaba.dubbo.registry.RegistryService#lookup(URL)}.
          */
+        @Override
         public synchronized void notify(List<URL> urls) {
             logger.debug("original override urls: " + urls);
             List<URL> matchedUrls = getMatchedUrls(urls, subscribeUrl);
@@ -484,6 +491,7 @@ public class RegistryProtocol implements Protocol {
             return originInvoker;
         }
 
+        @Override
         public Invoker<T> getInvoker() {
             return exporter.getInvoker();
         }
@@ -492,6 +500,7 @@ public class RegistryProtocol implements Protocol {
             this.exporter = exporter;
         }
 
+        @Override
         public void unexport() {
             String key = getCacheKey(this.originInvoker);
             bounds.remove(key);

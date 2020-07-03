@@ -34,6 +34,7 @@ import java.util.Set;
 @Menu(name = "Hosts", desc = "Show provider and consumer hosts", order = 3000)
 public class HostsPageHandler implements PageHandler {
 
+    @Override
     public Page handle(URL url) {
         List<List<String>> rows = new ArrayList<List<String>>();
         Set<String> hosts = RegistryContainer.getInstance().getHosts();

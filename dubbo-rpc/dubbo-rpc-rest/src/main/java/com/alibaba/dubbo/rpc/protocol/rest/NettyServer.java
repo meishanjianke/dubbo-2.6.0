@@ -34,6 +34,7 @@ public class NettyServer extends BaseRestServer {
 
     private final NettyJaxrsServer server = new NettyJaxrsServer();
 
+    @Override
     protected void doStart(URL url) {
         server.setPort(url.getPort());
         Map<ChannelOption, Object> channelOption = new HashMap<ChannelOption, Object>();
@@ -44,10 +45,12 @@ public class NettyServer extends BaseRestServer {
         server.start();
     }
 
+    @Override
     public void stop() {
         server.stop();
     }
 
+    @Override
     protected ResteasyDeployment getDeployment() {
         return server.getDeployment();
     }

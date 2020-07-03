@@ -32,6 +32,7 @@ import java.util.List;
 @Menu(name = "Home", desc = "Home page.", order = Integer.MIN_VALUE)
 public class HomePageHandler implements PageHandler {
 
+    @Override
     public Page handle(URL url) {
         List<List<String>> rows = new ArrayList<List<String>>();
         for (PageHandler handler : PageServlet.getInstance().getMenus()) {

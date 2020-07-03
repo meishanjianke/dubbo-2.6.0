@@ -29,6 +29,7 @@ import java.util.List;
  */
 public class UnsubscribePageHandler implements PageHandler {
 
+    @Override
     public Page handle(URL url) {
         String consumer = url.getParameterAndDecoded("consumer");
         if (consumer == null || consumer.length() == 0) {
@@ -56,6 +57,7 @@ public class UnsubscribePageHandler implements PageHandler {
         private NotifyListenerAdapter() {
         }
 
+        @Override
         public void notify(List<URL> urls) {
         }
 

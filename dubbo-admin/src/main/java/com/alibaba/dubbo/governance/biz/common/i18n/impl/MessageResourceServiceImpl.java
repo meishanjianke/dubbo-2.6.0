@@ -32,6 +32,7 @@ public class MessageResourceServiceImpl implements MessageResourceService {
         this.messageSource = messageSource;
     }
 
+    @Override
     public String get(String key, Object... args) {
         try {
             if (messageSource != null) {
@@ -43,6 +44,7 @@ public class MessageResourceServiceImpl implements MessageResourceService {
         }
     }
 
+    @Override
     public String getMessage(String key, Object... args) {
         return get(key, args);
     }

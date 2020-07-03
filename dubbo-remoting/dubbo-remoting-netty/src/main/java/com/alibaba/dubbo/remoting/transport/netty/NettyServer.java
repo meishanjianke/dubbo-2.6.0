@@ -79,6 +79,7 @@ public class NettyServer extends AbstractServer implements Server {
         // final Timer timer = new HashedWheelTimer(new NamedThreadFactory("NettyIdleTimer", true));
         // 设置 PipelineFactory
         bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
+            @Override
             public ChannelPipeline getPipeline() {
                 NettyCodecAdapter adapter = new NettyCodecAdapter(getCodec(), getUrl(), NettyServer.this);
                 ChannelPipeline pipeline = Channels.pipeline();
@@ -138,6 +139,7 @@ public class NettyServer extends AbstractServer implements Server {
         }
     }
 
+    @Override
     public Collection<Channel> getChannels() {
         Collection<Channel> chs = new HashSet<Channel>();
         for (Channel channel : this.channels.values()) {
@@ -150,10 +152,12 @@ public class NettyServer extends AbstractServer implements Server {
         return chs;
     }
 
+    @Override
     public Channel getChannel(InetSocketAddress remoteAddress) {
         return channels.get(NetUtils.toAddressString(remoteAddress));
     }
 
+    @Override
     public boolean isBound() {
         return channel.isBound();
     }

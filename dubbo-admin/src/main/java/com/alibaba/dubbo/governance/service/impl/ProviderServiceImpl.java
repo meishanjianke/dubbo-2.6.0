@@ -45,11 +45,13 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
     @Autowired
     OverrideService overrideService;
 
+    @java.lang.Override
     public void create(Provider provider) {
         URL url = provider.toUrl();
         registryService.register(url);
     }
 
+    @java.lang.Override
     public void enableProvider(Long id) {
         if (id == null) {
             throw new IllegalStateException("no provider id");
@@ -87,6 +89,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         }
     }
 
+    @java.lang.Override
     public void disableProvider(Long id) {
         if (id == null) {
             throw new IllegalStateException("no provider id");
@@ -125,10 +128,12 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
 
     }
 
+    @java.lang.Override
     public void doublingProvider(Long id) {
         setWeight(id, 2F);
     }
 
+    @java.lang.Override
     public void halvingProvider(Long id) {
         setWeight(id, 0.5F);
     }
@@ -201,6 +206,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         return weight;
     }
 
+    @java.lang.Override
     public void deleteStaticProvider(Long id) {
         URL oldProvider = findProviderUrl(id);
         if (oldProvider == null) {
@@ -209,6 +215,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         registryService.unregister(oldProvider);
     }
 
+    @java.lang.Override
     public void updateProvider(Provider provider) {
         Long id = provider.getId();
         if (id == null) {
@@ -225,6 +232,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         registryService.register(newProvider);
     }
 
+    @java.lang.Override
     public Provider findProvider(Long id) {
         return SyncUtils.url2Provider(findProviderUrlPair(id));
     }
@@ -233,6 +241,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         return SyncUtils.filterFromCategory(getRegistryCache(), Constants.PROVIDERS_CATEGORY, id);
     }
 
+    @java.lang.Override
     public List<String> findServices() {
         List<String> ret = new ArrayList<String>();
         ConcurrentMap<String, Map<Long, URL>> providerUrls = getRegistryCache().get(Constants.PROVIDERS_CATEGORY);
@@ -240,6 +249,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         return ret;
     }
 
+    @java.lang.Override
     public List<String> findAddresses() {
         List<String> ret = new ArrayList<String>();
 
@@ -258,6 +268,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         return ret;
     }
 
+    @java.lang.Override
     public List<String> findAddressesByApplication(String application) {
         List<String> ret = new ArrayList<String>();
         ConcurrentMap<String, Map<Long, URL>> providerUrls = getRegistryCache().get(Constants.PROVIDERS_CATEGORY);
@@ -275,6 +286,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         return ret;
     }
 
+    @java.lang.Override
     public List<String> findAddressesByService(String service) {
         List<String> ret = new ArrayList<String>();
         ConcurrentMap<String, Map<Long, URL>> providerUrls = getRegistryCache().get(Constants.PROVIDERS_CATEGORY);
@@ -289,6 +301,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         return ret;
     }
 
+    @java.lang.Override
     public List<String> findApplicationsByServiceName(String service) {
         List<String> ret = new ArrayList<String>();
         ConcurrentMap<String, Map<Long, URL>> providerUrls = getRegistryCache().get(Constants.PROVIDERS_CATEGORY);
@@ -307,6 +320,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         return ret;
     }
 
+    @java.lang.Override
     public List<Provider> findByService(String serviceName) {
         return SyncUtils.url2ProviderList(findProviderUrlByService(serviceName));
     }
@@ -319,6 +333,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         return SyncUtils.filterFromCategory(getRegistryCache(), filter);
     }
 
+    @java.lang.Override
     public List<Provider> findAll() {
         return SyncUtils.url2ProviderList(findAllProviderUrl());
     }
@@ -329,6 +344,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         return SyncUtils.filterFromCategory(getRegistryCache(), filter);
     }
 
+    @java.lang.Override
     public List<Provider> findByAddress(String providerAddress) {
         return SyncUtils.url2ProviderList(findProviderUrlByAddress(providerAddress));
     }
@@ -341,6 +357,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         return SyncUtils.filterFromCategory(getRegistryCache(), filter);
     }
 
+    @java.lang.Override
     public List<String> findServicesByAddress(String address) {
         List<String> ret = new ArrayList<String>();
 
@@ -361,6 +378,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         return ret;
     }
 
+    @java.lang.Override
     public List<String> findApplications() {
         List<String> ret = new ArrayList<String>();
         ConcurrentMap<String, Map<Long, URL>> providerUrls = getRegistryCache().get(Constants.PROVIDERS_CATEGORY);
@@ -378,6 +396,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         return ret;
     }
 
+    @java.lang.Override
     public List<Provider> findByApplication(String application) {
         return SyncUtils.url2ProviderList(findProviderUrlByApplication(application));
     }
@@ -389,6 +408,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         return SyncUtils.filterFromCategory(getRegistryCache(), filter);
     }
 
+    @java.lang.Override
     public List<String> findServicesByApplication(String application) {
         List<String> ret = new ArrayList<String>();
 
@@ -409,6 +429,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         return ret;
     }
 
+    @java.lang.Override
     public List<String> findMethodsByService(String service) {
         List<String> ret = new ArrayList<String>();
 
@@ -438,6 +459,7 @@ public class ProviderServiceImpl extends AbstractService implements ProviderServ
         return findProvider(id).toUrl();
     }
 
+    @java.lang.Override
     public Provider findByServiceAndAddress(String service, String address) {
         return SyncUtils.url2Provider(findProviderUrl(service, address));
     }

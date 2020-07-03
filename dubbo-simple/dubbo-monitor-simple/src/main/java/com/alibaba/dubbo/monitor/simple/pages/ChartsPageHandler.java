@@ -33,6 +33,7 @@ import java.util.List;
  */
 public class ChartsPageHandler implements PageHandler {
 
+    @Override
     public Page handle(URL url) {
         String service = url.getParameter("service");
         if (service == null || service.length() == 0) {

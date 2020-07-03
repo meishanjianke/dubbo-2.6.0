@@ -35,6 +35,7 @@ public class Unregister extends Shell {
     @Autowired
     private HttpServletRequest request;
 
+    @Override
     @SuppressWarnings("unchecked")
     protected String doExecute(Map<String, Object> context) throws Exception {
         Map<String, String[]> params = request.getParameterMap();

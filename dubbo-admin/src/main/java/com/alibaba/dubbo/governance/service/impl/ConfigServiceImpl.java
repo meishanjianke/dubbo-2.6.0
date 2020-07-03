@@ -31,6 +31,7 @@ public class ConfigServiceImpl extends AbstractService implements ConfigService 
     /* (non-Javadoc)
      * @see com.alibaba.dubbo.governance.service.ConfigService#update(java.util.List)
      */
+    @Override
     public void update(List<Config> configs) {
         // TODO Auto-generated method stub
 
@@ -39,6 +40,7 @@ public class ConfigServiceImpl extends AbstractService implements ConfigService 
     /* (non-Javadoc)
      * @see com.alibaba.dubbo.governance.service.ConfigService#findAllConfigsMap()
      */
+    @Override
     public Map<String, String> findAllConfigsMap() {
         // TODO Auto-generated method stub
         return null;

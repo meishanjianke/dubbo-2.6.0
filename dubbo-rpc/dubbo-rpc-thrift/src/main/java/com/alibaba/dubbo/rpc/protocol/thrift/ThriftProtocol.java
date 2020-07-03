@@ -101,10 +101,12 @@ public class ThriftProtocol extends AbstractProtocol {
 
     };
 
+    @Override
     public int getDefaultPort() {
         return DEFAULT_PORT;
     }
 
+    @Override
     public <T> Exporter<T> export(Invoker<T> invoker) throws RpcException {
 
         // can use thrift codec only
@@ -124,6 +126,7 @@ public class ThriftProtocol extends AbstractProtocol {
         return exporter;
     }
 
+    @Override
     public void destroy() {
 
         super.destroy();
@@ -147,6 +150,7 @@ public class ThriftProtocol extends AbstractProtocol {
 
     } // ~ end of method destroy
 
+    @Override
     public <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException {
 
         ThriftInvoker<T> invoker = new ThriftInvoker<T>(type, url, getClients(url), invokers);

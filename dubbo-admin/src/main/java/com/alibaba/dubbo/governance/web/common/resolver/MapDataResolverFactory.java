@@ -36,6 +36,7 @@ public class MapDataResolverFactory implements DataResolverFactory {
     @Autowired
     private HttpServletRequest request;
 
+    @Override
     public DataResolver getDataResolver(DataResolverContext context) {
         if (Map.class == context.getTypeInfo().getRawType()) {
             return new MapDataResolver(context);
@@ -51,6 +52,7 @@ public class MapDataResolverFactory implements DataResolverFactory {
             this.context = context;
         }
 
+        @Override
         public Object resolve() {
             TurbineRunDataInternal rundata = (TurbineRunDataInternal) TurbineUtil.getTurbineRunData(request);
             return new ParameterMap(request, rundata.getContext(), rundata);

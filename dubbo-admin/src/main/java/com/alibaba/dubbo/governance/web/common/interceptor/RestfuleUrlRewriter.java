@@ -75,6 +75,7 @@ public class RestfuleUrlRewriter implements RewriteSubstitutionHandler {
         appParameter = Collections.unmodifiableSet(set);
     }
 
+    @Override
     public void postSubstitution(RewriteSubstitutionContext context) {
         final String oldPath = context.getPath();
         String path = oldPath;

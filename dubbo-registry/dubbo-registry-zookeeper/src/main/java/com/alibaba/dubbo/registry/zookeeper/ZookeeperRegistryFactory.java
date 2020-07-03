@@ -33,6 +33,7 @@ public class ZookeeperRegistryFactory extends AbstractRegistryFactory {
         this.zookeeperTransporter = zookeeperTransporter;
     }
 
+    @Override
     public Registry createRegistry(URL url) {
         // 创建 ZookeeperRegistry
         return new ZookeeperRegistry(url, zookeeperTransporter);

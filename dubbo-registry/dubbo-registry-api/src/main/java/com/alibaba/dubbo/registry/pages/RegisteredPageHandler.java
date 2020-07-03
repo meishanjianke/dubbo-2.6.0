@@ -34,6 +34,7 @@ import java.util.Set;
  */
 public class RegisteredPageHandler implements PageHandler {
 
+    @Override
     public Page handle(URL url) {
         String registryAddress = url.getParameter("registry", "");
         List<List<String>> rows = new ArrayList<List<String>>();

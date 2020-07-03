@@ -34,6 +34,7 @@ public class ToolUtil implements ToolFactory {
     RouteService routeService;
     private boolean singleton = false;
 
+    @Override
     public Object createTool() throws Exception {
         Tool tool = new Tool();
         tool.setOverrideService(overrideService);
@@ -41,6 +42,7 @@ public class ToolUtil implements ToolFactory {
         return tool;
     }
 
+    @Override
     public boolean isSingleton() {
         return this.singleton;
     }

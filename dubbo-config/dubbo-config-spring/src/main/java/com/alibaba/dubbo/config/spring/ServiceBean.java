@@ -75,6 +75,7 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
         return SPRING_CONTEXT;
     }
 
+    @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
         SpringExtensionFactory.addApplicationContext(applicationContext);
@@ -100,6 +101,7 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
         }
     }
 
+    @Override
     public void setBeanName(String name) {
         this.beanName = name;
     }
@@ -113,6 +115,7 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
         return service;
     }
 
+    @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         // 是否有延迟导出 && 是否已导出 && 是不是已被取消导出
         if (isDelay() && !isExported() && !isUnexported()) {
@@ -136,6 +139,7 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
         return supportedApplicationListener && (delay == null || delay == -1);
     }
 
+    @Override
     @SuppressWarnings({"unchecked", "deprecation"})
     public void afterPropertiesSet() throws Exception {
         // 判断是否解析过 provider 配置，解析过则不再解析
@@ -299,11 +303,13 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
         }
     }
 
+    @Override
     public void destroy() throws Exception {
         unexport();
     }
 
     // merged from dubbox
+    @Override
     protected Class getServiceClass(T ref) {
         if (AopUtils.isAopProxy(ref)) {
             return AopUtils.getTargetClass(ref);

@@ -53,6 +53,7 @@ public class LocaleValve extends AbstractValve {
     protected void init() throws Exception {
     }
 
+    @Override
     public void invoke(PipelineContext pipelineContext) throws Exception {
         TurbineRunData rundata = getTurbineRunData(request);
         if (ignoreTarget(rundata.getTarget())) {

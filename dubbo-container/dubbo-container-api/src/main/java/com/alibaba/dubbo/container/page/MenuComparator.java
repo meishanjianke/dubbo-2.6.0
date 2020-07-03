@@ -26,6 +26,7 @@ public class MenuComparator implements Comparator<PageHandler>, Serializable {
 
     private static final long serialVersionUID = -3161526932904414029L;
 
+    @Override
     public int compare(PageHandler o1, PageHandler o2) {
         if (o1 == null && o2 == null) {
             return 0;

@@ -56,6 +56,7 @@ public class DubboClassPathBeanDefinitionScanner extends ClassPathBeanDefinition
 
     }
 
+    @Override
     public Set<BeanDefinitionHolder> doScan(String... basePackages) {
         return super.doScan(basePackages);
     }

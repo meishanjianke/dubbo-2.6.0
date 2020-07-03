@@ -43,6 +43,7 @@ public class JettyContainer implements Container {
     private static final Logger logger = LoggerFactory.getLogger(JettyContainer.class);
     SelectChannelConnector connector;
 
+    @Override
     public void start() {
         String serverPort = ConfigUtils.getProperty(JETTY_PORT);
         int port;
@@ -75,6 +76,7 @@ public class JettyContainer implements Container {
         }
     }
 
+    @Override
     public void stop() {
         try {
             if (connector != null) {

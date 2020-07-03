@@ -85,6 +85,7 @@ public class JdkCompiler extends AbstractCompiler {
             }
         }
         classLoader = AccessController.doPrivileged(new PrivilegedAction<ClassLoaderImpl>() {
+            @Override
             public ClassLoaderImpl run() {
                 return new ClassLoaderImpl(loader);
             }

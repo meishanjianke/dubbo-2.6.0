@@ -29,6 +29,7 @@ import java.util.List;
 public class OverrideUtils {
 
     public static final Comparator<Override> OVERRIDE_COMPARATOR = new Comparator<Override>() {
+        @java.lang.Override
         public int compare(Override o1, Override o2) {
             if (o1 == null && o2 == null) {
                 return 0;

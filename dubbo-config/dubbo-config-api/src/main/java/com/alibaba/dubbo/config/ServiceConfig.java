@@ -211,6 +211,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         // 延迟暴露
         if (delay != null && delay > 0) {
             delayExportExecutor.schedule(new Runnable() {
+                @Override
                 public void run() {
                     /* 作为 ScheduledExecutorService 的一个作业进行暴露 */
                     doExport();

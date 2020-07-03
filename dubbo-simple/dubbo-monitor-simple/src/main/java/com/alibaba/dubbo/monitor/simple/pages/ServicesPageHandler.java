@@ -33,6 +33,7 @@ import java.util.Set;
 @Menu(name = "Services", desc = "Show registered services.", order = 2000)
 public class ServicesPageHandler implements PageHandler {
 
+    @Override
     public Page handle(URL url) {
         Set<String> services = RegistryContainer.getInstance().getServices();
         List<List<String>> rows = new ArrayList<List<String>>();

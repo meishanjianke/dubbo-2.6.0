@@ -36,6 +36,7 @@ import java.util.Map;
  */
 public class StatisticsPageHandler implements PageHandler {
 
+    @Override
     public Page handle(URL url) {
         String service = url.getParameter("service");
         if (service == null || service.length() == 0) {

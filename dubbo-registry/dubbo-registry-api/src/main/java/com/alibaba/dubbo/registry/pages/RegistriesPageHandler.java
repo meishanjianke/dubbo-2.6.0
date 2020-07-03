@@ -36,6 +36,7 @@ import java.util.List;
 @Menu(name = "Registries", desc = "Show connected registries.", order = 10000)
 public class RegistriesPageHandler implements PageHandler {
 
+    @Override
     public Page handle(URL url) {
         List<List<String>> rows = new ArrayList<List<String>>();
         Collection<Registry> registries = AbstractRegistryFactory.getRegistries();

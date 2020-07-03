@@ -26,6 +26,7 @@ import com.alibaba.dubbo.monitor.simple.RegistryContainer;
  */
 public class UnregisterPageHandler implements PageHandler {
 
+    @Override
     public Page handle(URL url) {
         String provider = url.getParameterAndDecoded("provider");
         if (provider == null || provider.length() == 0) {

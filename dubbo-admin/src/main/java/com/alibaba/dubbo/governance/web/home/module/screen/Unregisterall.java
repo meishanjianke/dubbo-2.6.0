@@ -33,6 +33,7 @@ public class Unregisterall extends Shell {
     @Autowired
     private HttpServletRequest request;
 
+    @Override
     protected String doExecute(Map<String, Object> context) throws Exception {
         String address = request.getParameter("provider");
         if (address == null || address.length() == 0) {

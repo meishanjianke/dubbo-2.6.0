@@ -57,10 +57,12 @@ public class ProtocolListenerWrapper implements Protocol {
         this.protocol = protocol;
     }
 
+    @Override
     public int getDefaultPort() {
         return protocol.getDefaultPort();
     }
 
+    @Override
     public <T> Exporter<T> export(Invoker<T> invoker) throws RpcException {
         // RegistryProtocol忽略本次包装
         if (Constants.REGISTRY_PROTOCOL.equals(invoker.getUrl().getProtocol())) {
@@ -72,6 +74,7 @@ public class ProtocolListenerWrapper implements Protocol {
                         .getActivateExtension(invoker.getUrl(), Constants.EXPORTER_LISTENER_KEY)));
     }
 
+    @Override
     public <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException {
         if (Constants.REGISTRY_PROTOCOL.equals(url.getProtocol())) {
             return protocol.refer(type, url);
@@ -82,6 +85,7 @@ public class ProtocolListenerWrapper implements Protocol {
                                 .getActivateExtension(url, Constants.INVOKER_LISTENER_KEY)));
     }
 
+    @Override
     public void destroy() {
         protocol.destroy();
     }

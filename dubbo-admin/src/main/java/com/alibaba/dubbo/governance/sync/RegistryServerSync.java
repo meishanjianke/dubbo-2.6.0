@@ -71,16 +71,19 @@ public class RegistryServerSync implements InitializingBean, DisposableBean, Not
         return registryCache;
     }
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         logger.info("Init Dubbo Admin Sync Cache...");
         registryService.subscribe(SUBSCRIBE, this);
     }
 
+    @Override
     public void destroy() throws Exception {
         registryService.unsubscribe(SUBSCRIBE, this);
     }
 
     // Notification of of any service with any type (override、subcribe、route、provider) is full.
+    @Override
     public void notify(List<URL> urls) {
         if (urls == null || urls.isEmpty()) {
             return;

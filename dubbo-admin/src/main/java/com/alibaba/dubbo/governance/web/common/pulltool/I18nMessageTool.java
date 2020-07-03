@@ -31,10 +31,12 @@ public class I18nMessageTool implements ToolFactory {
     private MessageResourceService messageResourceService;
     private boolean singleton = true;
 
+    @Override
     public Object createTool() throws Exception {
         return messageResourceService;
     }
 
+    @Override
     public boolean isSingleton() {
         return this.singleton;
     }

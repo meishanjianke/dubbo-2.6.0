@@ -32,6 +32,7 @@ import java.util.Set;
 @Menu(name = "Applications", desc = "Show application dependencies.", order = 1000)
 public class ApplicationsPageHandler implements PageHandler {
 
+    @Override
     public Page handle(URL url) {
         Set<String> applications = RegistryContainer.getInstance().getApplications();
         List<List<String>> rows = new ArrayList<List<String>>();

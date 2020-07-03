@@ -198,6 +198,7 @@ public class JavaSerializer extends AbstractSerializer {
         return null;
     }
 
+    @Override
     public void writeObject(Object obj, AbstractHessianOutput out)
             throws IOException {
         if (out.addRef(obj)) {
@@ -305,6 +306,7 @@ public class JavaSerializer extends AbstractSerializer {
     static class BooleanFieldSerializer extends FieldSerializer {
         static final FieldSerializer SER = new BooleanFieldSerializer();
 
+        @Override
         void serialize(AbstractHessianOutput out, Object obj, Field field)
                 throws IOException {
             boolean value = false;
@@ -322,6 +324,7 @@ public class JavaSerializer extends AbstractSerializer {
     static class IntFieldSerializer extends FieldSerializer {
         static final FieldSerializer SER = new IntFieldSerializer();
 
+        @Override
         void serialize(AbstractHessianOutput out, Object obj, Field field)
                 throws IOException {
             int value = 0;
@@ -339,6 +342,7 @@ public class JavaSerializer extends AbstractSerializer {
     static class LongFieldSerializer extends FieldSerializer {
         static final FieldSerializer SER = new LongFieldSerializer();
 
+        @Override
         void serialize(AbstractHessianOutput out, Object obj, Field field)
                 throws IOException {
             long value = 0;
@@ -356,6 +360,7 @@ public class JavaSerializer extends AbstractSerializer {
     static class DoubleFieldSerializer extends FieldSerializer {
         static final FieldSerializer SER = new DoubleFieldSerializer();
 
+        @Override
         void serialize(AbstractHessianOutput out, Object obj, Field field)
                 throws IOException {
             double value = 0;
@@ -373,6 +378,7 @@ public class JavaSerializer extends AbstractSerializer {
     static class StringFieldSerializer extends FieldSerializer {
         static final FieldSerializer SER = new StringFieldSerializer();
 
+        @Override
         void serialize(AbstractHessianOutput out, Object obj, Field field)
                 throws IOException {
             String value = null;
@@ -390,6 +396,7 @@ public class JavaSerializer extends AbstractSerializer {
     static class DateFieldSerializer extends FieldSerializer {
         static final FieldSerializer SER = new DateFieldSerializer();
 
+        @Override
         void serialize(AbstractHessianOutput out, Object obj, Field field)
                 throws IOException {
             java.util.Date value = null;

@@ -31,10 +31,12 @@ import java.util.concurrent.ConcurrentMap;
 
 public class ConsumerServiceImpl extends AbstractService implements ConsumerService {
 
+    @Override
     public List<Consumer> findByService(String service) {
         return SyncUtils.url2ConsumerList(findConsumerUrlByService(service));
     }
 
+    @Override
     public Consumer findConsumer(Long id) {
         return SyncUtils.url2Consumer(findConsumerUrl(id));
     }
@@ -43,6 +45,7 @@ public class ConsumerServiceImpl extends AbstractService implements ConsumerServ
         return SyncUtils.filterFromCategory(getRegistryCache(), Constants.CONSUMERS_CATEGORY, id);
     }
 
+    @Override
     public List<Consumer> findAll() {
         return SyncUtils.url2ConsumerList(findAllConsumerUrl());
     }
@@ -53,6 +56,7 @@ public class ConsumerServiceImpl extends AbstractService implements ConsumerServ
         return SyncUtils.filterFromCategory(getRegistryCache(), filter);
     }
 
+    @Override
     public List<String> findAddresses() {
         List<String> ret = new ArrayList<String>();
         ConcurrentMap<String, Map<Long, URL>> consumerUrls = getRegistryCache().get(Constants.CONSUMERS_CATEGORY);
@@ -70,6 +74,7 @@ public class ConsumerServiceImpl extends AbstractService implements ConsumerServ
         return ret;
     }
 
+    @Override
     public List<String> findAddressesByApplication(String application) {
         List<String> ret = new ArrayList<String>();
         ConcurrentMap<String, Map<Long, URL>> consumerUrls = getRegistryCache().get(Constants.CONSUMERS_CATEGORY);
@@ -91,6 +96,7 @@ public class ConsumerServiceImpl extends AbstractService implements ConsumerServ
         return ret;
     }
 
+    @Override
     public List<String> findAddressesByService(String service) {
         List<String> ret = new ArrayList<String>();
         ConcurrentMap<String, Map<Long, URL>> consumerUrls = getRegistryCache().get(Constants.CONSUMERS_CATEGORY);
@@ -105,10 +111,12 @@ public class ConsumerServiceImpl extends AbstractService implements ConsumerServ
         return ret;
     }
 
+    @Override
     public List<Consumer> findByAddress(String consumerAddress) {
         return SyncUtils.url2ConsumerList(findConsumerUrlByAddress(consumerAddress));
     }
 
+    @Override
     public List<String> findServicesByAddress(String address) {
         List<String> ret = new ArrayList<String>();
         ConcurrentMap<String, Map<Long, URL>> consumerUrls = getRegistryCache().get(Constants.CONSUMERS_CATEGORY);
@@ -136,6 +144,7 @@ public class ConsumerServiceImpl extends AbstractService implements ConsumerServ
         return SyncUtils.filterFromCategory(getRegistryCache(), filter);
     }
 
+    @Override
     public List<String> findApplications() {
         List<String> ret = new ArrayList<String>();
         ConcurrentMap<String, Map<Long, URL>> consumerUrls = getRegistryCache().get(Constants.CONSUMERS_CATEGORY);
@@ -153,6 +162,7 @@ public class ConsumerServiceImpl extends AbstractService implements ConsumerServ
         return ret;
     }
 
+    @Override
     public List<String> findApplicationsByServiceName(String service) {
         List<String> ret = new ArrayList<String>();
         ConcurrentMap<String, Map<Long, URL>> consumerUrls = getRegistryCache().get(Constants.CONSUMERS_CATEGORY);
@@ -171,6 +181,7 @@ public class ConsumerServiceImpl extends AbstractService implements ConsumerServ
         return ret;
     }
 
+    @Override
     public List<Consumer> findByApplication(String application) {
         return SyncUtils.url2ConsumerList(findConsumerUrlByApplication(application));
     }
@@ -183,6 +194,7 @@ public class ConsumerServiceImpl extends AbstractService implements ConsumerServ
         return SyncUtils.filterFromCategory(getRegistryCache(), filter);
     }
 
+    @Override
     public List<String> findServicesByApplication(String application) {
         List<String> ret = new ArrayList<String>();
         ConcurrentMap<String, Map<Long, URL>> consumerUrls = getRegistryCache().get(Constants.CONSUMERS_CATEGORY);
@@ -202,6 +214,7 @@ public class ConsumerServiceImpl extends AbstractService implements ConsumerServ
         return ret;
     }
 
+    @Override
     public List<String> findServices() {
         List<String> ret = new ArrayList<String>();
         ConcurrentMap<String, Map<Long, URL>> consumerUrls = getRegistryCache().get(Constants.CONSUMERS_CATEGORY);

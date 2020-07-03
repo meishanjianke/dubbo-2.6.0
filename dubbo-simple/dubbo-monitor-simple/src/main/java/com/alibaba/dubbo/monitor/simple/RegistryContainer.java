@@ -193,6 +193,7 @@ public class RegistryContainer implements Container {
         return urls;
     }
 
+    @Override
     public void start() {
         String url = ConfigUtils.getProperty(REGISTRY_ADDRESS);
         if (url == null || url.length() == 0) {
@@ -208,6 +209,7 @@ public class RegistryContainer implements Container {
                 + Constants.CONSUMERS_CATEGORY,
                 Constants.CHECK_KEY, String.valueOf(false));
         registry.subscribe(subscribeUrl, new NotifyListener() {
+            @Override
             public void notify(List<URL> urls) {
                 if (urls == null || urls.size() == 0) {
                     return;
@@ -287,6 +289,7 @@ public class RegistryContainer implements Container {
         });
     }
 
+    @Override
     public void stop() {
     }
 

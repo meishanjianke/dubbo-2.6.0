@@ -34,6 +34,7 @@ public class Lookup extends Restful {
     @Autowired
     private RegistryService registryService;
 
+    @Override
     public Result doExecute(Map<String, Object> context) throws Exception {
         String inf = request.getParameter("interface");
         if (inf == null || inf.isEmpty()) {

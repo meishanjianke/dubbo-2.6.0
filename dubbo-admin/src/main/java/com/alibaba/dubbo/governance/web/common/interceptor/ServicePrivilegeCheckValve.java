@@ -42,6 +42,7 @@ public class ServicePrivilegeCheckValve extends AbstractValve {
     protected void init() throws Exception {
     }
 
+    @Override
     public void invoke(PipelineContext pipelineContext) throws Exception {
         User user = (User) request.getSession().getAttribute(WebConstants.CURRENT_USER_KEY);
         invokeCheckServicePrivilege(user);

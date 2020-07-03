@@ -33,10 +33,12 @@ import java.util.Map;
  */
 public class RouteServiceImpl extends AbstractService implements RouteService {
 
+    @Override
     public void createRoute(Route route) {
         registryService.register(route.toUrl());
     }
 
+    @Override
     public void updateRoute(Route route) {
         Long id = route.getId();
         if (id == null) {
@@ -51,6 +53,7 @@ public class RouteServiceImpl extends AbstractService implements RouteService {
         registryService.register(route.toUrl());
     }
 
+    @Override
     public void deleteRoute(Long id) {
         URL oldRoute = findRouteUrl(id);
         if (oldRoute == null) {
@@ -59,6 +62,7 @@ public class RouteServiceImpl extends AbstractService implements RouteService {
         registryService.unregister(oldRoute);
     }
 
+    @Override
     public void enableRoute(Long id) {
         if (id == null) {
             throw new IllegalStateException("no route id");
@@ -78,6 +82,7 @@ public class RouteServiceImpl extends AbstractService implements RouteService {
 
     }
 
+    @Override
     public void disableRoute(Long id) {
         if (id == null) {
             throw new IllegalStateException("no route id");
@@ -97,6 +102,7 @@ public class RouteServiceImpl extends AbstractService implements RouteService {
 
     }
 
+    @Override
     public List<Route> findAll() {
         return SyncUtils.url2RouteList(findAllUrl());
     }
@@ -108,6 +114,7 @@ public class RouteServiceImpl extends AbstractService implements RouteService {
         return SyncUtils.filterFromCategory(getRegistryCache(), filter);
     }
 
+    @Override
     public Route findRoute(Long id) {
         return SyncUtils.url2Route(findRouteUrlPair(id));
     }
@@ -135,30 +142,37 @@ public class RouteServiceImpl extends AbstractService implements RouteService {
         return SyncUtils.filterFromCategory(getRegistryCache(), filter);
     }
 
+    @Override
     public List<Route> findByService(String serviceName) {
         return SyncUtils.url2RouteList(findRouteUrl(serviceName, null, false));
     }
 
+    @Override
     public List<Route> findByAddress(String address) {
         return SyncUtils.url2RouteList(findRouteUrl(null, address, false));
     }
 
+    @Override
     public List<Route> findByServiceAndAddress(String service, String address) {
         return SyncUtils.url2RouteList(findRouteUrl(service, address, false));
     }
 
+    @Override
     public List<Route> findForceRouteByService(String service) {
         return SyncUtils.url2RouteList(findRouteUrl(service, null, true));
     }
 
+    @Override
     public List<Route> findForceRouteByAddress(String address) {
         return SyncUtils.url2RouteList(findRouteUrl(null, address, true));
     }
 
+    @Override
     public List<Route> findForceRouteByServiceAndAddress(String service, String address) {
         return SyncUtils.url2RouteList(findRouteUrl(service, address, true));
     }
 
+    @Override
     public List<Route> findAllForceRoute() {
         return SyncUtils.url2RouteList(findRouteUrl(null, null, true));
     }

@@ -83,6 +83,7 @@ public class MapDeserializer extends AbstractMapDeserializer {
         }
     }
 
+    @Override
     public Class getType() {
         if (_type != null)
             return _type;
@@ -90,6 +91,7 @@ public class MapDeserializer extends AbstractMapDeserializer {
             return HashMap.class;
     }
 
+    @Override
     public Object readMap(AbstractHessianInput in)
             throws IOException {
         Map map;

@@ -29,6 +29,7 @@ import java.lang.reflect.Method;
  */
 public class LoadStatusChecker implements StatusChecker {
 
+    @Override
     public Status check() {
         OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
         double load;

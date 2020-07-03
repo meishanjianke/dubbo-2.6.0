@@ -77,6 +77,7 @@ public class AuthorizationValve extends AbstractValve {
     protected void init() throws Exception {
     }
 
+    @Override
     public void invoke(PipelineContext pipelineContext) throws Exception {
         if (logger.isInfoEnabled()) {
             logger.info("AuthorizationValve of uri: " + request.getRequestURI());

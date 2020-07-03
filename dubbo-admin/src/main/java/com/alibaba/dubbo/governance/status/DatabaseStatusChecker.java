@@ -48,6 +48,7 @@ public class DatabaseStatusChecker implements StatusChecker {
         check(); // init
     }
 
+    @Override
     public Status check() {
         boolean ok;
         try {

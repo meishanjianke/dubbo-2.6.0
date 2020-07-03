@@ -21,6 +21,7 @@ import java.util.Map;
 
 public class Reg extends Restful {
 
+    @Override
     public Result doExecute(Map<String, Object> context) throws Exception {
         if (url == null) {
             throw new IllegalArgumentException("please give me the url");

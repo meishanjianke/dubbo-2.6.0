@@ -45,6 +45,7 @@ public class GovernanceWarmup implements InitializingBean {
 
     private StatusChecker warmupStatusChecker;
 
+    @Override
     public void afterPropertiesSet() throws Exception {
         logger.info("Registry Console warn up.");
 
