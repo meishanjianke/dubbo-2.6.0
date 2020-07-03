@@ -55,3 +55,5 @@ Dubbo 服务导出过程始于 Spring 容器发布刷新事件，Dubbo 在接收
 第一部分是前置工作，主要用于检查参数，组装 URL。
 第二部分是导出服务，包含导出服务到本地 (JVM)，和导出服务到远程两个过程。
 ZookeeperClient第三部分是向注册中心注册服务，用于服务发现。
+
+https://blog.csdn.net/qq_33404395/article/details/86498060?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase

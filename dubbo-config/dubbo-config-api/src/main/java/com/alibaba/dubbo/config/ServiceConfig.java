@@ -398,6 +398,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     private void doExportUrls() {
         /* 加载注册中心配置 */
         List<URL> registryURLs = loadRegistries(true);
+        //可以配置多个protocol标签，暴露多个端口
         for (ProtocolConfig protocolConfig : protocols) {
             /* 为每个协议暴露服务 */
             doExportUrlsFor1Protocol(protocolConfig, registryURLs);
