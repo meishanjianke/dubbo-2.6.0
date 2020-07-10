@@ -56,6 +56,7 @@ public class NettyClient extends AbstractClient {
     private volatile Channel channel; // volatile, please copy reference to use
 
     public NettyClient(final URL url, final ChannelHandler handler) throws RemotingException {
+        /* handler包装过程我们在provider暴露过程中分析过 */
         super(url, wrapChannelHandler(url, handler));
     }
 
@@ -85,6 +86,7 @@ public class NettyClient extends AbstractClient {
     @Override
     protected void doConnect() throws Throwable {
         long start = System.currentTimeMillis();
+        // 获取连接地址建立连接
         ChannelFuture future = bootstrap.connect(getConnectAddress());
         try {
             boolean ret = future.awaitUninterruptibly(getConnectTimeout(), TimeUnit.MILLISECONDS);
@@ -94,6 +96,7 @@ public class NettyClient extends AbstractClient {
                 newChannel.setInterestOps(Channel.OP_READ_WRITE);
                 try {
                     // Close old channel
+                    // 关闭旧的channel
                     Channel oldChannel = NettyClient.this.channel; // copy reference
                     if (oldChannel != null) {
                         try {
@@ -106,6 +109,7 @@ public class NettyClient extends AbstractClient {
                         }
                     }
                 } finally {
+                    // 如果client关闭了，则新的channel也要关闭
                     if (NettyClient.this.isClosed()) {
                         try {
                             if (logger.isInfoEnabled()) {

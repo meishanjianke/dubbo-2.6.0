@@ -74,13 +74,17 @@ public class ProviderConsumerRegTable {
     }
 
     public static void registerConsuemr(Invoker invoker, URL registryUrl, URL consumerUrl, RegistryDirectory registryDirectory) {
+        // 构建包装类
         ConsumerInvokerWrapper wrapperInvoker = new ConsumerInvokerWrapper(invoker, registryUrl, consumerUrl, registryDirectory);
         String serviceUniqueName = consumerUrl.getServiceKey();
+        // 从服务唯一名称和invoker集合的映射中获取invoker集合
         Set<ConsumerInvokerWrapper> invokers = consumerInvokers.get(serviceUniqueName);
         if (invokers == null) {
+            // 获取不到添加新的集合
             consumerInvokers.putIfAbsent(serviceUniqueName, new ConcurrentHashSet<ConsumerInvokerWrapper>());
             invokers = consumerInvokers.get(serviceUniqueName);
         }
+        // 包装类放入集合
         invokers.add(wrapperInvoker);
     }
 

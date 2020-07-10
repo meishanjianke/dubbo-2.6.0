@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * ConsistentHashLoadBalance
- *
+ * 一致性哈希策略
  */
 public class ConsistentHashLoadBalance extends AbstractLoadBalance {
 
@@ -43,11 +43,15 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
     protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation invocation) {
         String key = invokers.get(0).getUrl().getServiceKey() + "." + invocation.getMethodName();
         int identityHashCode = System.identityHashCode(invokers);
+        // 尝试从缓存中获取一致性哈希选择器
         ConsistentHashSelector<T> selector = (ConsistentHashSelector<T>) selectors.get(key);
+        // 这里的identityHashCode主要作用是确定invoker集合是否发生变化
         if (selector == null || selector.identityHashCode != identityHashCode) {
+            /* 构建新的一致性哈希选择器并缓存 */
             selectors.put(key, new ConsistentHashSelector<T>(invokers, invocation.getMethodName(), identityHashCode));
             selector = (ConsistentHashSelector<T>) selectors.get(key);
         }
+        /* 选择器选择invoker */
         return selector.select(invocation);
     }
 
@@ -65,18 +69,23 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
             this.virtualInvokers = new TreeMap<Long, Invoker<T>>();
             this.identityHashCode = identityHashCode;
             URL url = invokers.get(0).getUrl();
+            // 默认160个虚拟节点
             this.replicaNumber = url.getMethodParameter(methodName, "hash.nodes", 160);
+            // 默认进行哈希匹配的参数index为0，也就是第一个
             String[] index = Constants.COMMA_SPLIT_PATTERN.split(url.getMethodParameter(methodName, "hash.arguments", "0"));
+            // 记录进行哈希匹配的参数的index数组
             argumentIndex = new int[index.length];
             for (int i = 0; i < index.length; i++) {
                 argumentIndex[i] = Integer.parseInt(index[i]);
             }
+            // 这里的作用个人理解为尽量将每个invoker的虚拟节点均匀的打散在哈希环上
             for (Invoker<T> invoker : invokers) {
                 String address = invoker.getUrl().getAddress();
                 for (int i = 0; i < replicaNumber / 4; i++) {
                     byte[] digest = md5(address + i);
                     for (int h = 0; h < 4; h++) {
                         long m = hash(digest, h);
+                        // 放置虚拟节点
                         virtualInvokers.put(m, invoker);
                     }
                 }
@@ -84,8 +93,10 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
         }
 
         public Invoker<T> select(Invocation invocation) {
+            // 根据指定进行哈希匹配的参数index取出参数
             String key = toKey(invocation.getArguments());
             byte[] digest = md5(key);
+            /* 根据哈希匹配invoker */
             return selectForKey(hash(digest, 0));
         }
 
@@ -102,14 +113,19 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
         private Invoker<T> selectForKey(long hash) {
             Invoker<T> invoker;
             Long key = hash;
+            // 判断虚拟节点映射中是否有匹配的哈希key
             if (!virtualInvokers.containsKey(key)) {
+                // 取出映射中key大于或等于给定参数哈希值的部分视图
                 SortedMap<Long, Invoker<T>> tailMap = virtualInvokers.tailMap(key);
                 if (tailMap.isEmpty()) {
+                    // 如果取出的部分视图是空的，则直接返回第一个key
                     key = virtualInvokers.firstKey();
                 } else {
+                    // 不为空则直接获取部分视图的第一个key
                     key = tailMap.firstKey();
                 }
             }
+            // 根据key取出invoker返回
             invoker = virtualInvokers.get(key);
             return invoker;
         }

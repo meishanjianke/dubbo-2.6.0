@@ -67,6 +67,7 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
 
 
     public AbstractClient(URL url, ChannelHandler handler) throws RemotingException {
+        // 父类初始化
         super(url, handler);
 
         send_reconnect = url.getParameter(Constants.SEND_RECONNECT_KEY, false);
@@ -77,6 +78,7 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
         reconnect_warning_period = url.getParameter("reconnect.waring.period", 1800);
 
         try {
+            /* 开启服务 */
             doOpen();
         } catch (Throwable t) {
             close();
@@ -86,12 +88,14 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
         }
         try {
             // connect.
+            /* 建立连接 */
             connect();
             if (logger.isInfoEnabled()) {
                 logger.info("Start " + getClass().getSimpleName() + " " + NetUtils.getLocalAddress() + " connect to the server " + getRemoteAddress());
             }
         } catch (RemotingException t) {
             if (url.getParameter(Constants.CHECK_KEY, true)) {
+                // 异常关闭操作，如关闭channel等
                 close();
                 throw t;
             } else {
@@ -99,6 +103,7 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
                         + " connect to the server " + getRemoteAddress() + " (check == false, ignore and retry later!), cause: " + t.getMessage(), t);
             }
         } catch (Throwable t) {
+            // 异常关闭操作，如关闭channel等
             close();
             throw new RemotingException(url.toInetSocketAddress(), null,
                     "Failed to start " + getClass().getSimpleName() + " " + NetUtils.getLocalAddress()
@@ -148,11 +153,13 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
         //reconnect=false to close reconnect
         int reconnect = getReconnectParam(getUrl());
         if (reconnect > 0 && (reconnectExecutorFuture == null || reconnectExecutorFuture.isCancelled())) {
+            // 重连任务
             Runnable connectStatusCheckCommand = new Runnable() {
                 @Override
                 public void run() {
                     try {
                         if (!isConnected()) {
+                            // 建立连接
                             connect();
                         } else {
                             lastConnectedTime = System.currentTimeMillis();
@@ -160,6 +167,7 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
                     } catch (Throwable t) {
                         String errorMsg = "client reconnect to " + getUrl().getAddress() + " find error . url: " + getUrl();
                         // wait registry sync provider list
+                        // 等待注册中心同步provider列表
                         if (System.currentTimeMillis() - lastConnectedTime > shutdown_timeout) {
                             if (!reconnect_error_log_flag.get()) {
                                 reconnect_error_log_flag.set(true);
@@ -173,6 +181,7 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
                     }
                 }
             };
+            // 固定间隔执行重连任务
             reconnectExecutorFuture = reconnectExecutorService.scheduleWithFixedDelay(connectStatusCheckCommand, reconnect, reconnect, TimeUnit.MILLISECONDS);
         }
     }
@@ -271,7 +280,9 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
             if (isConnected()) {
                 return;
             }
+            /* 初始化重连线程 */
             initConnectStatusCheckCommand();
+            /* 连接操作 */
             doConnect();
             if (!isConnected()) {
                 throw new RemotingException(this, "Failed connect to server " + getRemoteAddress() + " from " + getClass().getSimpleName() + " "
