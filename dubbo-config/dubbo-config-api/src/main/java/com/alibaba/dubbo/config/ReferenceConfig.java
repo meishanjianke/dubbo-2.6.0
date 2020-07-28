@@ -217,6 +217,7 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
         if (ProtocolUtils.isGeneric(getGeneric())) {
             // 泛化服务
             interfaceClass = GenericService.class;
+        // 普通接口的实现
         } else {
             try {
                 // 加载类
@@ -231,10 +232,14 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
         // -------------------------------✨ 分割线1 ✨------------------------------
         // 解析文件的应用
         // 从系统变量中获取与接口名对应的属性值
+        // 直连提供者，参见文档《直连提供者》http://dubbo.apache.org/zh-cn/docs/user/demos/explicit-target.html
+        // 【直连提供者】第一优先级，通过 -D 参数指定 ，例如 java -Dcom.alibaba.xxx.XxxService=dubbo://localhost:20890
         String resolve = System.getProperty(interfaceName);
         String resolveFile = null;
+        // 【直连提供者】第二优先级，通过文件映射，例如 com.alibaba.xxx.XxxService=dubbo://localhost:20890
         if (resolve == null || resolve.length() == 0) {
             // 从系统属性中获取解析文件路径
+            // 默认先加载，`${user.home}/dubbo-resolve.properties` 文件 ，无需配置
             resolveFile = System.getProperty("dubbo.resolve.file");
             if (resolveFile == null || resolveFile.length() == 0) {
                 // 从指定位置加载配置文件
@@ -244,6 +249,7 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
                     resolveFile = userResolveFile.getAbsolutePath();
                 }
             }
+            // 存在 resolveFile ，则进行文件读取加载。
             if (resolveFile != null && resolveFile.length() > 0) {
                 Properties properties = new Properties();
                 FileInputStream fis = null;
@@ -264,6 +270,7 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
                 resolve = properties.getProperty(interfaceName);
             }
         }
+        // 设置直连提供者的 url
         if (resolve != null && resolve.length() > 0) {
             // 将 resolve 赋值给 url
             url = resolve;
@@ -278,6 +285,7 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
         // -------------------------------✨ 分割线2 ✨------------------------------
 
         // 最终确定各个配置对象
+        // 从 ConsumerConfig 对象中，读取 application、module、registries、monitor 配置对象。
         if (consumer != null) {
             if (application == null) {
                 // 从 consumer 中获取 Application 实例，下同

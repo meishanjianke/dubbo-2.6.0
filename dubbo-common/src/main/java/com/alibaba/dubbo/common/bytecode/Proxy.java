@@ -66,6 +66,7 @@ public abstract class Proxy {
      * @return Proxy instance.
      */
     public static Proxy getProxy(Class<?>... ics) {
+        // 调用重载方法
         return getProxy(ClassHelper.getClassLoader(Proxy.class), ics);
     }
 
