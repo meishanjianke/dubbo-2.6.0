@@ -22,6 +22,7 @@ import com.alibaba.dubbo.rpc.cluster.Cluster;
 import com.alibaba.dubbo.rpc.cluster.Directory;
 
 /**
+ * 失败自动切换
  * {@link FailoverClusterInvoker}
  *
  */
@@ -31,6 +32,7 @@ public class FailoverCluster implements Cluster {
 
     @Override
     public <T> Invoker<T> join(Directory<T> directory) throws RpcException {
+        // 创建并返回 FailoverClusterInvoker 对象
         return new FailoverClusterInvoker<T>(directory);
     }
 

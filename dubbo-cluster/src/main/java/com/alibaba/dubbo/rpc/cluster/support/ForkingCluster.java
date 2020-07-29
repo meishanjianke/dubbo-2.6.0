@@ -22,6 +22,7 @@ import com.alibaba.dubbo.rpc.cluster.Cluster;
 import com.alibaba.dubbo.rpc.cluster.Directory;
 
 /**
+ * 并行调用多个服务提供者
  * {@link ForkingClusterInvoker}
  *
  */

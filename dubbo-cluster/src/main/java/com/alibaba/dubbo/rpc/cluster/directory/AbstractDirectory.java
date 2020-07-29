@@ -66,6 +66,17 @@ public abstract class AbstractDirectory<T> implements Directory<T> {
         setRouters(routers);
     }
 
+    /**
+     * 上面就是 AbstractDirectory 的 list 方法源码，这个方法封装了 Invoker 的列举过程。如下：
+     *
+     * 1调用 doList 获取 Invoker 列表
+     * 2根据 Router 的 getUrl 返回值为空与否，以及 runtime 参数决定是否进行服务路由
+     * 以上步骤中，doList 是模板方法，需由子类实现。Router 的 runtime 参数这里简单说明一下，这个参数决定了是否在每次调用服务时都执行路由规则。如果 runtime 为
+     * true，那么每次调用服务前，都需要进行服务路由。这个对性能造成影响，配置时需要注意。
+     * @param invocation
+     * @return
+     * @throws RpcException
+     */
     @Override
     public List<Invoker<T>> list(Invocation invocation) throws RpcException {
         if (destroyed) {

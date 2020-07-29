@@ -25,6 +25,7 @@ import com.alibaba.dubbo.rpc.cluster.Router;
 import java.util.List;
 
 /**
+ * 即静态服务目录，顾名思义，它内部存放的 Invoker 是不会变动的。所以，理论上它和不可变 List 的功能很相似。
  * StaticDirectory
  *
  */

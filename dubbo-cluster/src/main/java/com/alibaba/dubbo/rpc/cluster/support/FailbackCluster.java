@@ -22,6 +22,7 @@ import com.alibaba.dubbo.rpc.cluster.Cluster;
 import com.alibaba.dubbo.rpc.cluster.Directory;
 
 /**
+ * 失败自动恢复
  * {@link FailbackClusterInvoker}
  *
  */
