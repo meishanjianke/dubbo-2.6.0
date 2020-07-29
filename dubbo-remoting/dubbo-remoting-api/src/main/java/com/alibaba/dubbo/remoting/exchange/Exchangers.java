@@ -110,6 +110,7 @@ public class Exchangers {
         url = url.addParameterIfAbsent(Constants.CODEC_KEY, "exchange");
         /* 建立连接 */
         // 获取 Exchanger 实例，默认为 HeaderExchangeClient
+        //getExchanger 会通过 SPI 加载 HeaderExchangeClient 实例
         return getExchanger(url).connect(url, handler);
     }
 

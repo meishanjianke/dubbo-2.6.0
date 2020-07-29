@@ -192,6 +192,13 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         return unexported;
     }
 
+    /**
+     * export 方法对两项配置进行了检查，并根据配置执行相应的动作。首先是 export
+     * 配置，这个配置决定了是否导出服务。有时候我们只是想本地启动服务进行一些调试工作，我们并不希望把本地启动的服务暴露出去给别人调用。此时，我们可通过配置 export 禁止服务导出，比如：
+     *
+     * <dubbo:provider export="false" />
+     * delay 配置顾名思义，用于延迟导出服务，这个就不分析了。
+     */
     public synchronized void export() {
         if (provider != null) {
             // 确定是否暴露过
@@ -224,7 +231,8 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     }
 
     /**
-     * 配置检查的逻辑
+     * 下面对配置检查的逻辑进行简单的总结，如下：
+     *
      * 检测 <dubbo:service> 标签的 interface 属性合法性，不合法则抛出异常
      * 检测 ProviderConfig、ApplicationConfig 等核心配置类对象是否为空，若为空，则尝试从其他配置类对象中获取相应的实例。
      * 检测并处理泛化服务和普通服务类
@@ -404,6 +412,9 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         unexported = true;
     }
 
+    /**
+     * 上面代码首先是通过 loadRegistries 加载注册中心链接，然后再遍历 ProtocolConfig 集合导出每个服务。并在导出服务的过程中，将服务注册到注册中心。
+     */
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void doExportUrls() {
         /* 加载注册中心配置 */
@@ -416,7 +427,17 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     }
 
     /**
+     * 上面的代码首先是将一些信息，比如版本、时间戳、方法名以及各种配置对象的字段信息放入到 map 中，map 中的内容将作为 URL 的查询字符串。
+     * 构建好 map 后，紧接着是获取上下文路径、主机名以及端口号等信息。最后将 map 和主机名等数据传给 URL 构造方法创建 URL 对象。需要注意的是，
+     * 这里出现的 URL 并非 java.net.URL，而是 com.alibaba.dubbo.common.URL。
      * 远程暴露
+     *
+     * 根据 url 中的 scope 参数决定服务导出方式，分别如下：
+     *
+     * scope = none，不导出服务
+     * scope != remote，导出到本地
+     * scope != local，导出到远程
+     * 不管是导出到本地，还是远程。进行服务导出之前，均需要先创建 Invoker，这是一个很重要的步骤。
      * @param protocolConfig
      * @param registryURLs
      */

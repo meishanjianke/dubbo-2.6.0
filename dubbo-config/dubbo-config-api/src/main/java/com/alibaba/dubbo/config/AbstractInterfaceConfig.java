@@ -166,6 +166,8 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
     }
 
     /**
+     * loadRegistries 方法主要包含如下的逻辑：
+     *
      * 检测是否存在注册中心配置类，不存在则抛出异常
      * 构建参数映射集合，也就是 map
      * 构建注册中心链接列表

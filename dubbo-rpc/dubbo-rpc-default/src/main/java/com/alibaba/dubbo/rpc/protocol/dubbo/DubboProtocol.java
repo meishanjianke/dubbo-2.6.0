@@ -262,6 +262,10 @@ public class DubboProtocol extends AbstractProtocol {
         return exporter;
     }
 
+    /**
+     * 如上，在同一台机器上（单网卡），同一个端口上仅允许启动一个服务器实例。若某个端口上已有服务器实例，此时则调用 reset 方法重置服务器的一些配置。
+     * @param url
+     */
     private void openServer(URL url) {
         // find server.
         // 获取 host:port，并将其作为服务器实例的 key，用于标识当前的服务器实例
@@ -283,6 +287,7 @@ public class DubboProtocol extends AbstractProtocol {
     }
 
     /**
+     * createServer 包含三个核心的逻辑
      * 第一是检测是否存在 server 参数所代表的 Transporter 拓展，不存在则抛出异常。
      * 第二是创建服务器实例。
      * 第三是检测是否支持 client 参数所表示的 Transporter 拓展，不存在也是抛出异常。两次检测操作所对应的代码比较直白了，无需多说。
@@ -378,6 +383,11 @@ public class DubboProtocol extends AbstractProtocol {
         return invoker;
     }
 
+    /**
+     * 这里根据 connections 数量决定是获取共享客户端还是创建新的客户端实例，默认情况下，使用共享客户端实例。
+     * @param url
+     * @return
+     */
     private ExchangeClient[] getClients(URL url) {
         // whether to share connection
         // 是否共享连接
@@ -406,6 +416,8 @@ public class DubboProtocol extends AbstractProtocol {
     }
 
     /**
+     * 上面方法先访问缓存，若缓存未命中，则通过 initClient 方法创建新的 ExchangeClient 实例，并将该实例传给 ReferenceCountExchangeClient
+     * 构造方法创建一个带有引用计数功能的 ExchangeClient 实例。
      * Get shared connection
      */
     private ExchangeClient getSharedClient(URL url) {
@@ -436,6 +448,9 @@ public class DubboProtocol extends AbstractProtocol {
     }
 
     /**
+     * initClient 方法首先获取用户配置的客户端类型，默认为 netty。然后检测用户配置的客户端类型是否存在，不存在则抛出异常。最后根据 lazy
+     * 配置决定创建什么类型的客户端。这里的 LazyConnectExchangeClient 代码并不是很复杂，该类会在 request 方法被调用时通过 Exchangers 的 connect
+     * 方法创建 ExchangeClient 客户端，该类的代码本节就不分析了。
      * Create new connection
      */
     private ExchangeClient initClient(URL url) {

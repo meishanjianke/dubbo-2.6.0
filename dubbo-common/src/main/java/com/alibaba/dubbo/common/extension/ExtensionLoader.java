@@ -440,6 +440,10 @@ public class ExtensionLoader<T> {
         }
     }
 
+    /**
+     * getAdaptiveExtension 方法首先会检查缓存，缓存未命中，则调用 createAdaptiveExtension 方法创建自适应拓展。
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public T getAdaptiveExtension() {
         // 首先尝试从缓存中获取
@@ -777,6 +781,7 @@ public class ExtensionLoader<T> {
     }
 
     /**
+     * createAdaptiveExtension 方法的代码比较少，但却包含了三个逻辑，分别如下：
      * 调用 getAdaptiveExtensionClass 方法获取自适应拓展 Class 对象
      * 通过反射进行实例化
      * 调用 injectExtension 方法向拓展实例中注入依赖
@@ -797,6 +802,7 @@ public class ExtensionLoader<T> {
     }
 
     /**
+     * getAdaptiveExtensionClass 方法同样包含了三个逻辑，如下：
      * 调用 getExtensionClasses 获取所有的拓展类
      * 检查缓存，若缓存不为空，则返回缓存
      * 若缓存为空，则调用 createAdaptiveExtensionClass 创建自适应拓展类
