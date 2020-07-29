@@ -52,6 +52,7 @@ public class NettyHandler extends SimpleChannelHandler {
             throw new IllegalArgumentException("handler == null");
         }
         this.url = url;
+        // 这里的 handler 类型为 NettyServer
         this.handler = handler;
     }
 
@@ -83,11 +84,18 @@ public class NettyHandler extends SimpleChannelHandler {
         }
     }
 
+    /**
+     * 如上，NettyHandler 中的 messageReceived 逻辑比较简单。首先根据一些信息获取 NettyChannel 实例，然后将 NettyChannel 实例以及 Request 对象向下传递。
+     * @param ctx
+     * @param e
+     * @throws Exception
+     */
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
         // 连接成功后添加netty的Channel和dubbo的NettyChannel之间的映射关系
         NettyChannel channel = NettyChannel.getOrAddChannel(ctx.getChannel(), url, handler);
         try {
+            // 继续向下调用
             handler.received(channel, e.getMessage());
         } finally {
             // 如果连接断开，移除netty的Channel和dubbo的NettyChannel之间的映射关系

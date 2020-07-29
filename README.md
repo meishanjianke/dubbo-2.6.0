@@ -118,3 +118,121 @@ Invoker 有什么用呢？看名字就知道了，这是一个具有远程调用
 - Failsafe Cluster - 失败安全
 - Failback Cluster - 失败自动恢复
 - Forking Cluster - 并行调用多个服务提供者
+
+### 负载均衡
+LoadBalance 中文意思为负载均衡，它的职责是将网络请求，或者其他形式的负载“均摊”到不同的机器上。避免集群中部分服务器压力过大，而另一些服务器比较空闲的情况。
+通过负载均衡，可以让每台服务器获取到适合自己处理能力的负载。在为高负载服务器分流的同时，还可以避免资源浪费，一举两得。负载均衡可分为软件负载均衡和硬件负载均衡。
+在我们日常开发中，一般很难接触到硬件负载均衡。但软件负载均衡还是可以接触到的，比如 Nginx。在 Dubbo 中，也有负载均衡的概念和相应的实现。
+Dubbo 需要对服务消费者的调用请求进行分配，避免少数服务提供者负载过大。服务提供者负载过大，会导致部分请求超时。因此将负载均衡到每个服务提供者上，是非常必要的。
+Dubbo 提供了4种负载均衡实现，分别是
+- 基于权重随机算法的 RandomLoadBalance、
+- 基于最少活跃调用数算法的 LeastActiveLoadBalance、
+- 基于 hash 一致性的 ConsistentHashLoadBalance，
+- 以及基于加权轮询算法的 RoundRobinLoadBalance。
+
+这几个负载均衡算法代码不是很长，但是想看懂也不是很容易，需要大家对这几个算法的原理有一定了解才行。如果不是很了解，也没不用太担心。我们会在分析每个算法的源码之前，
+对算法原理进行简单的讲解，帮助大家建立初步的印象。
+
+### 服务调用过程
+Dubbo 服务调用过程比较复杂，包含众多步骤，比如发送请求、编解码、服务降级、过滤器链处理、序列化、线程派发以及响应请求等步骤。限于篇幅原因，本篇文章无法对所有的步骤一一进行分析。
+本篇文章将会重点分析请求的发送与接收、编解码、线程派发以及响应的发送与接收等过程，至于服务降级、过滤器链和序列化大家自行进行分析，也可以将其当成一个黑盒，暂时忽略也没关系。
+
+#### Dubbo 服务调用过程。
+
+![](./img/服务调用过程.png)
+首先服务消费者通过代理对象 Proxy 发起远程调用，接着通过网络客户端 Client 将编码后的请求发送给服务提供方的网络层上，也就是 Server。Server 在收到请求后，
+首先要做的事情是对数据包进行解码。然后将解码后的请求发送至分发器 Dispatcher，再由分发器将请求派发到指定的线程池上，最后由线程池调用具体的服务。
+这就是一个远程调用请求的发送与接收过程。至于响应的发送与接收过程，这张图中没有表现出来。对于这两个过程，我们也会进行详细分析。
+
+#### 服务调用方式
+Dubbo 支持同步和异步两种调用方式，其中异步调用还可细分为“有返回值”的异步调用和“无返回值”的异步调用。所谓“无返回值”异步调用是指服务消费方只管调用，
+但不关心调用结果，此时 Dubbo 会直接返回一个空的 RpcResult。若要使用异步特性，需要服务消费方手动进行配置。默认情况下，Dubbo 使用同步调用方式。
+#### 为了便于大家阅读代码，这里以 DemoService 为例，将 sayHello 方法的整个调用路径贴出来。
+    proxy0#sayHello(String)
+      —> InvokerInvocationHandler#invoke(Object, Method, Object[])
+        —> MockClusterInvoker#invoke(Invocation)
+          —> AbstractClusterInvoker#invoke(Invocation)
+            —> FailoverClusterInvoker#doInvoke(Invocation, List<Invoker<T>>, LoadBalance)
+              —> Filter#invoke(Invoker, Invocation)  // 包含多个 Filter 调用
+                —> ListenerInvokerWrapper#invoke(Invocation) 
+                  —> AbstractInvoker#invoke(Invocation) 
+                    —> DubboInvoker#doInvoke(Invocation)
+                      —> ReferenceCountExchangeClient#request(Object, int)
+                        —> HeaderExchangeClient#request(Object, int)
+                          —> HeaderExchangeChannel#request(Object, int)
+                            —> AbstractPeer#send(Object)
+                              —> AbstractClient#send(Object, boolean)
+                                —> NettyChannel#send(Object, boolean)
+                                  —> NioClientSocketChannel#write(Object)
+#### 请求编码
+Dubbo 数据包结构。
+![](./img/数据包结构.png)
+Dubbo 数据包分为消息头和消息体，消息头用于存储一些元信息，比如魔数（Magic），数据包类型（Request/Response），消息体长度（Data Length）等。
+消息体中用于存储具体的调用消息，比如方法名称，参数列表等。下面简单列举一下消息头的内容。   
+
+    偏移量(Bit)	字段	取值
+    0 ~ 7	魔数高位	0xda00
+    8 ~ 15	魔数低位	0xbb
+    16	数据包类型	0 - Response, 1 - Request
+    17	调用方式	仅在第16位被设为1的情况下有效，0 - 单向调用，1 - 双向调用
+    18	事件标识	0 - 当前数据包是请求或响应包，1 - 当前数据包是心跳包
+    19 ~ 23	序列化器编号	2 - Hessian2Serialization
+    3 - JavaSerialization
+    4 - CompactedJavaSerialization
+    6 - FastJsonSerialization
+    7 - NativeJavaSerialization
+    8 - KryoSerialization
+    9 - FstSerialization
+    24 ~ 31	状态	20 - OK
+    30 - CLIENT_TIMEOUT
+    31 - SERVER_TIMEOUT
+    40 - BAD_REQUEST
+    50 - BAD_RESPONSE
+    ......
+    32 ~ 95	请求编号	共8字节，运行时生成
+    96 ~ 127	消息体长度	运行时计算
+
+#### 调用服务
+解码器将数据包解析成 Request 对象后，NettyHandler 的 messageReceived 方法紧接着会收到这个对象，并将这个对象继续向下传递。
+这期间该对象会被依次传递给 NettyServer、MultiMessageHandler、HeartbeatHandler 以及 AllChannelHandler。
+最后由 AllChannelHandler 将该对象封装到 Runnable 实现类对象中，并将 Runnable 放入线程池中执行后续的调用逻辑。整个调用栈如下：
+
+    NettyHandler#messageReceived(ChannelHandlerContext, MessageEvent)
+      —> AbstractPeer#received(Channel, Object)
+        —> MultiMessageHandler#received(Channel, Object)
+          —> HeartbeatHandler#received(Channel, Object)
+            —> AllChannelHandler#received(Channel, Object)
+              —> ExecutorService#execute(Runnable)    // 由线程池执行后续的调用逻辑
+#### 线程派发模型
+Dubbo 将底层通信框架中接收请求的线程称为 IO 线程。如果一些事件处理逻辑可以很快执行完，比如只在内存打一个标记，此时直接在 IO 线程上执行该段逻辑即可。
+但如果事件的处理逻辑比较耗时，比如该段逻辑会发起数据库查询或者 HTTP 请求。此时我们就不应该让事件处理逻辑在 IO 线程上执行，而是应该派发到线程池中去执行。
+原因也很简单，IO 线程主要用于接收请求，如果 IO 线程被占满，将导致它不能接收新的请求。
+![](./img/服务调用过程.png)
+如上图，红框中的 Dispatcher 就是线程派发器。需要说明的是，Dispatcher 真实的职责创建具有线程派发能力的 ChannelHandler，比如 AllChannelHandler、
+MessageOnlyChannelHandler 和 ExecutionChannelHandler 等，其本身并不具备线程派发能力。Dubbo 支持 5 种不同的线程派发策略，下面通过一个表格列举一下。
+
+    策略	用途
+    all	所有消息都派发到线程池，包括请求，响应，连接事件，断开事件等
+    direct	所有消息都不派发到线程池，全部在 IO 线程上直接执行
+    message	只有请求和响应消息派发到线程池，其它消息均在 IO 线程上执行
+    execution	只有请求消息派发到线程池，不含响应。其它消息均在 IO 线程上执行
+    connection	在 IO 线程上，将连接断开事件放入队列，有序逐个执行，其它消息派发到线程池
+默认配置下，Dubbo 使用 all 派发策略，即将所有的消息都派发到线程池中。下面我们来分析一下 AllChannelHandler 的代码。
+#### 整个服务调用过程
+    ChannelEventRunnable#run()
+      —> DecodeHandler#received(Channel, Object)
+        —> HeaderExchangeHandler#received(Channel, Object)
+          —> HeaderExchangeHandler#handleRequest(ExchangeChannel, Request)
+            —> DubboProtocol.requestHandler#reply(ExchangeChannel, Object)
+              —> Filter#invoke(Invoker, Invocation)
+                —> AbstractProxyInvoker#invoke(Invocation)
+                  —> Wrapper0#invokeMethod(Object, String, Class[], Object[])
+                    —> DemoServiceImpl#sayHello(String)
+
+本篇文章在多个地方都强调过调用编号很重要，但一直没有解释原因，这里简单说明一下。一般情况下，服务消费方会并发调用多个服务，每个用户线程发送请求后，
+会调用不同 DefaultFuture 对象的 get 方法进行等待。 一段时间后，服务消费方的线程池会收到多个响应对象。这个时候要考虑一个问题，
+如何将每个响应对象传递给相应的 DefaultFuture 对象，且不出错。答案是通过调用编号。DefaultFuture 被创建时，会要求传入一个 Request 对象。
+此时 DefaultFuture 可从 Request 对象中获取调用编号，并将 <调用编号, DefaultFuture 对象> 映射关系存入到静态 Map 中，即 FUTURES。
+线程池中的线程在收到 Response 对象后，会根据 Response 对象中的调用编号到 FUTURES 集合中取出相应的 DefaultFuture 对象，然后再将 Response 
+对象设置到 DefaultFuture 对象中。最后再唤醒用户线程，这样用户线程即可从 DefaultFuture 对象中获取调用结果了。整个过程大致如下图：
+![](./img/调用编号.png)
